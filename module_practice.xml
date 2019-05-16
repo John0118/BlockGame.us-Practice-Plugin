@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_practice" default="compile.module.practice">
+  <dirname property="module.practice.basedir" file="${ant.file.module_practice}"/>
+  
+  <property name="module.jdk.home.practice" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.practice" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.practice" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.practice" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="practice.output.dir" value="${module.practice.basedir}/out/production/Practice"/>
+  <property name="practice.testoutput.dir" value="${module.practice.basedir}/out/test/Practice"/>
+  
+  <path id="practice.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="practice.module.production.classpath">
+    <path refid="${module.jdk.classpath.practice}"/>
+    <path refid="library.spigot.classpath"/>
+  </path>
+  
+  <path id="practice.runtime.production.module.classpath">
+    <pathelement location="${practice.output.dir}"/>
+    <path refid="library.spigot.classpath"/>
+  </path>
+  
+  <path id="practice.module.classpath">
+    <path refid="${module.jdk.classpath.practice}"/>
+    <pathelement location="${practice.output.dir}"/>
+    <path refid="library.spigot.classpath"/>
+  </path>
+  
+  <path id="practice.runtime.module.classpath">
+    <pathelement location="${practice.testoutput.dir}"/>
+    <pathelement location="${practice.output.dir}"/>
+    <path refid="library.spigot.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.practice">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.practice">
+    <patternset refid="excluded.from.module.practice"/>
+  </patternset>
+  
+  <path id="practice.module.sourcepath">
+    <dirset dir="${module.practice.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.practice" depends="compile.module.practice.production,compile.module.practice.tests" description="Compile module Practice"/>
+  
+  <target name="compile.module.practice.production" depends="register.custom.compilers" description="Compile module Practice; production classes">
+    <mkdir dir="${practice.output.dir}"/>
+    <javac2 destdir="${practice.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.practice}/javac">
+      <compilerarg line="${compiler.args.practice}"/>
+      <bootclasspath refid="practice.module.bootclasspath"/>
+      <classpath refid="practice.module.production.classpath"/>
+      <src refid="practice.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.practice"/>
+    </javac2>
+    
+    <copy todir="${practice.output.dir}">
+      <fileset dir="${module.practice.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.practice.tests" depends="register.custom.compilers,compile.module.practice.production" description="compile module Practice; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.practice" description="cleanup module">
+    <delete dir="${practice.output.dir}"/>
+    <delete dir="${practice.testoutput.dir}"/>
+  </target>
+</project>

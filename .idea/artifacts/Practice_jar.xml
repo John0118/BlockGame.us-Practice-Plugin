@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Practice:jar">
+    <output-path>$USER_HOME$/Desktop/BlockgameUS/plugins</output-path>
+    <root id="archive" name="Practice.jar">
+      <element id="module-output" name="Practice" />
+    </root>
+  </artifact>
+</component>
